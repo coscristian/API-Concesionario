@@ -1,0 +1,22 @@
+{
+  "name": "api-concesionario",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/coscristian/API-Concesionario.git",
+  "author": "Cristian Quesada Cossio <cristian.quesada@utp.edu.co>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongodb": "4.0",
+    "mongoose": "^7.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
