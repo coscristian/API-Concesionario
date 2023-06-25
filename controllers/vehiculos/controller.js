@@ -13,7 +13,7 @@ const queryAllVehicles = async (callback) => {
 const crearVehiculo = async (datosVehiculo, callback) => {
     //console.log("Llaves: ", Object.keys(datosVehiculo));
     const conexion = getDB();
-    
+
     if (Object.keys(datosVehiculo).includes("nombre") &&
         Object.keys(datosVehiculo).includes("marca") &&
         Object.keys(datosVehiculo).includes("modelo")) {
@@ -23,6 +23,13 @@ const crearVehiculo = async (datosVehiculo, callback) => {
         //res.sendStatus(500);
         return 'error';
     }
+}
+
+const consultarVehiculo = async (id, callback) => {
+    const conexion = getDB();
+    await conexion
+        .collection("vehiculo")
+        .findOne({_id: new ObjectId(id)}, callback);
 }
 
 const editarVehiculo = async (id, edicion, callback) => {
@@ -40,4 +47,4 @@ const eliminarVehiculo = async (id, callback) => {
     conexion.collection('vehiculo').deleteOne(filtroVehiculo, callback);
 }
 
-export { queryAllVehicles, crearVehiculo, editarVehiculo, eliminarVehiculo };
+export { queryAllVehicles, crearVehiculo, editarVehiculo, eliminarVehiculo, consultarVehiculo };
