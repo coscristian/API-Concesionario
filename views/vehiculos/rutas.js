@@ -1,6 +1,6 @@
 import Express from 'express';
 import { getDB } from '../../db/db.js';
-import { crearVehiculo, queryAllVehicles } from '../../controllers/vehiculos/controller.js';
+import { crearVehiculo, editarVehiculo, queryAllVehicles } from '../../controllers/vehiculos/controller.js';
 
 const rutasVehiculo = Express.Router();
 
@@ -36,22 +36,7 @@ rutasVehiculo.route("/vehiculos/nuevo").post((req, res) => {
 });
 
 rutasVehiculo.route('/vehiculos/editar').patch((req, res) => {
-    const edicion = req.body;
-    const filtroVehiculo = { _id: new ObjectId(edicion.id) };
-    delete edicion.id; // Siempre se debe eliminar el id enviado por el body para que no se duplique en la BBDD al actualizar el elemento
-    const operacion = {
-        $set: edicion,    // Operación atomica
-    }
-    const conexion = getDB();
-    conexion.collection('vehiculo').findOneAndUpdate(filtroVehiculo, operacion, { upsert: true, returnOriginal: true }, (err, result) => {
-        if (err) {
-            console.error("Error actualizando el vehiculo: ", err);
-            res.sendStatus(500);
-        } else {
-            console.log("Actualizado con exito");
-            res.sendStatus(200);
-        }
-    }); // upsert: true (actualiza el elemento)
+    editarVehiculo(req.body, genericCallback(res));
 });
 
 rutasVehiculo.route('/vehiculos/eliminar').delete((req, res) => {

@@ -1,4 +1,5 @@
 import { getDB } from '../../db/db.js';
+import { ObjectId } from 'mongodb';
 
 const queryAllVehicles = async (callback) => {
     const conexion = getDB();
@@ -17,11 +18,21 @@ const crearVehiculo = async (datosVehiculo, callback) => {
         Object.keys(datosVehiculo).includes("marca") &&
         Object.keys(datosVehiculo).includes("modelo")) {
         // Crear vehiculo den la BD
-        conexion.collection('vehiculo').insertOne(datosVehiculo, callback)
+        await conexion.collection('vehiculo').insertOne(datosVehiculo, callback)
     } else {
         //res.sendStatus(500);
         return 'error';
     }
 }
 
-export { queryAllVehicles, crearVehiculo };
+const editarVehiculo = async (edicion, callback) => {
+    const filtroVehiculo = { _id: new ObjectId(edicion.id) };
+    delete edicion.id; // Siempre se debe eliminar el id enviado por el body para que no se duplique en la BBDD al actualizar el elemento
+    const operacion = {
+        $set: edicion,    // Operación atomica
+    }
+    const conexion = getDB();
+    await conexion.collection('vehiculo').findOneAndUpdate(filtroVehiculo, operacion, { upsert: true, returnOriginal: true }, callback); // upsert: true (actualiza el elemento)
+}
+
+export { queryAllVehicles, crearVehiculo, editarVehiculo };
