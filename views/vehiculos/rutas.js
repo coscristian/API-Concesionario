@@ -23,23 +23,20 @@ const genericCallback = (res)  => {
     }
  */
 
-
 rutasVehiculo.route("/vehiculos").get((req, res) => {
-    console.log("Alguien hizo un get en la ruta /vehiculos\n");
-
     queryAllVehicles(genericCallback(res));
 });
 
-rutasVehiculo.route("/vehiculos/nuevo").post((req, res) => {
+rutasVehiculo.route("/vehiculos").post((req, res) => {
     crearVehiculo(req.body, genericCallback(res));
 });
 
-rutasVehiculo.route('/vehiculos/editar').patch((req, res) => {
-    editarVehiculo(req.body, genericCallback(res));
+rutasVehiculo.route('/vehiculos/:id').patch((req, res) => {
+    editarVehiculo(req.params.id, req.body, genericCallback(res));
 });
 
-rutasVehiculo.route('/vehiculos/eliminar').delete((req, res) => {
-    eliminarVehiculo(req.body.id, genericCallback(res));
+rutasVehiculo.route('/vehiculos/:id').delete((req, res) => {
+    eliminarVehiculo(req.params.id, genericCallback(res));
 })
 
 export default rutasVehiculo;

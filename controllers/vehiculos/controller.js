@@ -25,9 +25,8 @@ const crearVehiculo = async (datosVehiculo, callback) => {
     }
 }
 
-const editarVehiculo = async (edicion, callback) => {
-    const filtroVehiculo = { _id: new ObjectId(edicion.id) };
-    delete edicion.id; // Siempre se debe eliminar el id enviado por el body para que no se duplique en la BBDD al actualizar el elemento
+const editarVehiculo = async (id, edicion, callback) => {
+    const filtroVehiculo = { _id: new ObjectId(id) };
     const operacion = {
         $set: edicion,    // Operación atomica
     }
