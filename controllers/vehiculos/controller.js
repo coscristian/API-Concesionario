@@ -35,4 +35,10 @@ const editarVehiculo = async (edicion, callback) => {
     await conexion.collection('vehiculo').findOneAndUpdate(filtroVehiculo, operacion, { upsert: true, returnOriginal: true }, callback); // upsert: true (actualiza el elemento)
 }
 
-export { queryAllVehicles, crearVehiculo, editarVehiculo };
+const eliminarVehiculo = async (id, callback) => {
+    const filtroVehiculo = { _id: new ObjectId(id) };
+    const conexion = getDB();
+    conexion.collection('vehiculo').deleteOne(filtroVehiculo, callback);
+}
+
+export { queryAllVehicles, crearVehiculo, editarVehiculo, eliminarVehiculo };
