@@ -1,49 +1,38 @@
 import Express from 'express';
-import {getDB } from '../../db/db.js';
+import { getDB } from '../../db/db.js';
+import { crearVehiculo, queryAllVehicles } from '../../controllers/vehiculos/controller.js';
 
 const rutasVehiculo = Express.Router();
 
+const genericCallback = (res)  => {
+    return (err, result) => {
+        if (err) {
+            res.status(400).send('Error consultando los vehiculos'); // Enviando un mensaje
+        } else {
+            res.json(result);
+        }
+    }
+}
+/**
+ * Es igual al genericCallback de arriba
+ * const genericCallback = (res) => (err, result) => {
+        if (err) {
+            res.status(400).send('Error consultando los vehiculos'); // Enviando un mensaje
+        } else {
+            res.json(result);
+        }
+    }
+ */
+
+
 rutasVehiculo.route("/vehiculos").get((req, res) => {
     console.log("Alguien hizo un get en la ruta /vehiculos\n");
-    const conexion = getDB();
-    conexion
-        .collection("vehiculo")
-        .find() // Filtros ({ marca: "Mazda" }) trae todos
-        .limit(50) // Cantidad de datos que quiero traer (Opcional)
-        .toArray((err, result) => {
-            if (err) {
-                res.status(400).send('Error consultando los vehiculos'); // Enviando un mensaje
-            } else {
-                res.json(result);
-            }
-        });
+
+    queryAllVehicles(genericCallback(res));
 });
 
 rutasVehiculo.route("/vehiculos/nuevo").post((req, res) => {
-    const datosVehiculo = req.body;
-    console.log("Llaves: ", Object.keys(datosVehiculo));
-    const conexion = getDB();
-    try {
-        if (Object.keys(datosVehiculo).includes("nombre") &&
-            Object.keys(datosVehiculo).includes("marca") &&
-            Object.keys(datosVehiculo).includes("modelo")) {
-            // Crear vehiculo den la BD
-            conexion.collection('vehiculo').insertOne(datosVehiculo, (err, result) => {
-                if (err) {
-                    console.error(err);
-                    res.sendStatus(500);
-                } else {
-                    console.log(result);
-                    res.sendStatus(200);
-                }
-            })
-
-        } else {
-            res.sendStatus(500);
-        }
-    } catch (error) {
-        res.sendStatus(500);
-    }
+    crearVehiculo(req.body, genericCallback(res));
 });
 
 rutasVehiculo.route('/vehiculos/editar').patch((req, res) => {
